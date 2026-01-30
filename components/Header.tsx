@@ -22,27 +22,37 @@ export default function Header({ title, showAddButton = false, showBackButton = 
   };
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-6">
-          <div className="flex items-center space-x-4">
+        <div className="flex justify-between items-center py-4 sm:py-6">
+          {/* Left side - Title and Back Button */}
+          <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
             {showBackButton && (
-              <Link href={backUrl}>
-                <Button variant="outline">Back</Button>
+              <Link href={backUrl} className="flex-shrink-0">
+                <Button variant="outline" size="sm" className="sm:hidden">
+                  ←
+                </Button>
+                <Button variant="outline" className="hidden sm:flex">
+                  Back
+                </Button>
               </Link>
             )}
-            <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">
+              {title}
+            </h1>
           </div>
-          <div className="flex items-center space-x-4">
+
+          {/* Right side - Action Buttons */}
+          <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
             {showAddButton && (
               <Link href="/departments/add">
-                <Button>
+                <Button size="sm" className="sm:default">
                   Add Department
                 </Button>
               </Link>
             )}
 
-            <Button variant="outline" onClick={handleLogout}>
+            <Button variant="outline" size="sm" className="sm:default" onClick={handleLogout}>
               Logout
             </Button>
           </div>

@@ -30,7 +30,7 @@ export async function getDepartment({ deptId }: { deptId: string }) {
     if (!token) {
       return { success: false, error: 'Authentication required' };
     }
-
+    console.log(deptId, 'ss');
     const response = await api.getDepartment({ deptId, token });
     return { success: true, data: response };
   } catch (error) {
@@ -73,10 +73,10 @@ export async function deleteDepartment({ deptId }: { deptId: string }) {
     }
 
     await api.deleteDepartment({ deptId, token });
-    
+
     // Revalidate the departments page to reflect the deletion
     revalidatePath('/departments');
-    
+
     return { success: true };
   } catch (error) {
     console.error('Delete department error:', error);

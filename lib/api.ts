@@ -1,6 +1,6 @@
 import { AuthResponse, RegisterData, LoginCredentials, CreateDepartmentData, AuthParams, DepartmentIdParams } from '@/types';
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = "https://employee-react.onrender.com/emp";
 
 export class ApiError extends Error {
   constructor(

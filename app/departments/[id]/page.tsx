@@ -1,11 +1,7 @@
 import { getDepartment } from '@/app/actions/departments';
-import Header from '@/components/Header';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import DepartmentDetailClient from './DepartmentDetailClient';
 import { Department } from '@/types';
 import { notFound } from 'next/navigation';
-import DeleteButton from './DeleteButton';
 
 interface DepartmentDetailPageProps {
   params: {
@@ -14,75 +10,38 @@ interface DepartmentDetailPageProps {
 }
 
 export default async function DepartmentDetailPage({ params }: DepartmentDetailPageProps) {
-  const result = await getDepartment({ deptId: params.id });
+  const { id } = await params;
 
-  if (!result.success || !result.data) {
+  const result = await getDepartment({ deptId: id });
+
+  if (!result.success) {
+    console.error('Failed to fetch department:', result.error);
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="bg-red-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-red-600 mb-2">Error Loading Department</h2>
+          <p className="text-gray-600 mb-6">{result.error || 'Failed to load department details'}</p>
+          <a 
+            href="/departments"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            ← Back to Departments
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (!result.data) {
     notFound();
   }
 
   const department = result.data as Department;
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Header title="Department Details" showAddButton={false} />
-
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="mb-4">
-            <Link href="/departments">
-              <Button variant="outline">
-                ← Back to Departments
-              </Button>
-            </Link>
-          </div>
-
-          <div className="max-w-2xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardDescription>Department Information</CardDescription>
-                  <h3 className="text-lg font-semibold mb-2">Depertment Name</h3>
-                <CardTitle className="text-2xl">{department.department}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Description</h3>
-                  <p className="text-gray-600">{department.description}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Department ID</h3>
-                  <p className="text-gray-600 font-mono">{department._id}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Created At</h3>
-                  <p className="text-gray-600">
-                    {new Date(department.createdAt).toLocaleString()}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Last Updated</h3>
-                  <p className="text-gray-600">
-                    {new Date(department.updatedAt).toLocaleString()}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t">
-                  <div className="flex space-x-2">
-                    <Link href="/departments">
-                      <Button variant="outline">
-                        Back to Departments
-                      </Button>
-                    </Link>
-                    <DeleteButton departmentId={department._id} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+  return <DepartmentDetailClient department={department} />;
 }
