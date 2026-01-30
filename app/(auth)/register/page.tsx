@@ -1,14 +1,8 @@
-import { redirect } from 'next/navigation';
-import { getAuthToken } from '@/lib/auth';
 import RegisterForm from '@/components/auth/RegisterForm';
 import Link from 'next/link';
 
 export default async function RegisterPage() {
-  // Check if user is already authenticated
-  const token = await getAuthToken();
-  if (token) {
-    redirect('/departments');
-  }
+
 
   return (
     <div className="w-full max-w-md">
